@@ -1,8 +1,7 @@
-# Taller 2 ICC713
+# Evaluación 1 Pruebas de Software
 
-Resolver según lo especificado en el PDF `Taller 2 - ICC713.pdf`
+Resolver según lo especificado en el PDF `Ev1.pdf`
 
 ## Integrantes
-- Integrante 1
-- Integrante 2
-- Integrante 3
+- Armin Rodriguez
+- Diego Mayorga
