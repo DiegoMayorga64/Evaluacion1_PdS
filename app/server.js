@@ -1,6 +1,7 @@
 const express = require('express');
 const GameService = require('../service/game-service'); // Import the GameService class
 const GameController = require('../controller/game-controller'); // Import the GameController class
+const functionality = require('../service/search-game');
 
 const app = express();
 const port = 3000;
@@ -17,5 +18,7 @@ app.post('/consoles/:console/genres/:genre/random_game', GameController.getRando
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-
- 
+app.get('/',(requerimiento,respuesta)=>{
+  const respuestaBuscador=functionality(requerimiento.query.name);
+  verificarError(respuestaBuscador,respuesta);
+});
