@@ -1,5 +1,7 @@
 const express = require('express');
 const videoGames = require('../controller/load-games');
+const errorLog=require('./error-log')
+const funcionalidad=require('./search-game')
 const app = express();
 const port = 3000;
 
@@ -19,6 +21,14 @@ function getRandomGames(gameArray, number_games) {
   return randomGames;
 }
 
+function verificarError(respuestaBuscador,respuesta){
+  if(respuestaBuscador===errorLog.ErrorHandler){
+      return errorLog.handleError(respuestaBuscador,respuesta);
+  }else{
+      return respuesta.json(respuestaBuscador);
+  }
+}
+
 app.get('/consoles/:console/random_games', (req, res) => {
   const consoleToShow = req.params.console;
   const games = videoGames[consoleToShow];
@@ -30,10 +40,11 @@ app.get('/consoles/:console/random_games', (req, res) => {
   }
 });
 
+app.get('/game',(req,res)=>{
+  const respuestaBuscador=funcionalidad(req.query.name);
+  verificarError(respuestaBuscador,res);
+});
+
 app.listen(port, () => {
   console.log(`Servidor escuchando en el puerto ${port}`);
 });
-app.get('/',(requerimiento,respuesta)=>{
-  const respuestaBuscador=funcionalidad(requerimiento.query.name);
-  verificarError(respuestaBuscador,respuesta);
-})
