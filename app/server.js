@@ -1,50 +1,21 @@
 const express = require('express');
-const videoGames = require('../controller/load-games');
-const errorLog=require('./error-log')
-const funcionalidad=require('./search-game')
+const GameService = require('../service/game-service'); // Import the GameService class
+const GameController = require('../controller/game-controller'); // Import the GameController class
+
 const app = express();
 const port = 3000;
 
 /**
- * Obtiene juegos aleatorios de un array.
- * @param {Array} gameArray - El array de juegos de donde se obtendrán los datos.
- * @param {number} number_games - El número de juegos aleatorios que se deben obtener.
- * @returns {Array} - Array que contiene los juegos aleatorios.
+ * Define routes for getting random games for a console and searching for a game by name.
  */
 
-function getRandomGames(gameArray, number_games) {
-  const randomGames = [];
-  for (let i = 0; i < number_games; i++) {
-    const randomIndex = Math.floor(Math.random() * gameArray.length);
-    randomGames.push(gameArray[randomIndex]);
-  }
-  return randomGames;
-}
-
-function verificarError(respuestaBuscador,respuesta){
-  if(respuestaBuscador===errorLog.ErrorHandler){
-      return errorLog.handleError(respuestaBuscador,respuesta);
-  }else{
-      return respuesta.json(respuestaBuscador);
-  }
-}
-
-app.get('/consoles/:console/random_games', (req, res) => {
-  const consoleToShow = req.params.console;
-  const games = videoGames[consoleToShow];
-  if (games) {
-    const randomGames = getRandomGames(games, 2); 
-    res.json({ console: consoleToShow, randomGames });
-  } else {
-    res.status(404).json({ error: 'Consola no encontrada' });
-  }
-});
-
-app.get('/game',(req,res)=>{
-  const respuestaBuscador=funcionalidad(req.query.name);
-  verificarError(respuestaBuscador,res);
-});
+app.get('/consoles/:console/random_games', GameController.getRandomConsoleGames);
+app.get('/game', GameController.searchGame);
+app.post('/genres/random_games', GameController.getRandomGamesByGenre);
+app.post('/consoles/:console/genres/:genre/random_game', GameController.getRandomGameByConsoleAndGenre);
 
 app.listen(port, () => {
-  console.log(`Servidor escuchando en el puerto ${port}`);
+  console.log(`Server listening on port ${port}`);
 });
+
+ 
